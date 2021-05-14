@@ -3,3 +3,13 @@ echo -n "A" | nc -u 192.168.50.211 50003
 
 # launch gstreamer on computer to listen to audio stream
 /usr/bin/gst-launch-1.0 udpsrc port=50000 ! rawaudioparse format=pcm pcm-format=s16le sample-rate=44100 num-channels=1 ! audioconvert ! audioresample ! autoaudiosink
+
+# in
+# /usr/local/lib/gstreamer-1.0
+gst-launch-1.0 -m pulsesrc ! audioconvert ! audiorate ! audioresample ! autoaudiosink deepspeech ! fakesink  --gst-plugin-path=$PWD
+gst-launch-1.0 udpsrc port=50000 ! rawaudioparse format=pcm pcm-format=s16le sample-rate=44100 num-channels=1 ! audioconvert ! audiorate ! audioresample ! volume volume=5.0 ! deepspeech silence-threshold=0.1 silence-length=20 ! autoaudiosink --gst-plugin-path=$PWD
+
+# models
+# /usr/share/deepspeech/models
+curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.pbmm
+curl -LO https://github.com/mozilla/DeepSpeech/releases/download/v0.9.3/deepspeech-0.9.3-models.scorer
