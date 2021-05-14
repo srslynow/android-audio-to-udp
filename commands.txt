@@ -1,0 +1,5 @@
+# request stream from device
+echo -n "A" | nc -u 192.168.50.211 50003
+
+# launch gstreamer on computer to listen to audio stream
+/usr/bin/gst-launch-1.0 udpsrc port=50000 ! rawaudioparse format=pcm pcm-format=s16le sample-rate=44100 num-channels=1 ! audioconvert ! audioresample ! autoaudiosink
